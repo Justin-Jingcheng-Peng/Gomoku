@@ -15,11 +15,17 @@ for (var i = 0; i < 3; i++){
         console.log(board[i][j]);
     }
 }
-
+function node(obj, pos_x, pos_y){
+    this.obj = obj;
+    this.pos_x = pos_x;
+    this.pos_y = pos_y;
+ 
+}
 function handClick(e){
   
     if (num_terms % 2 == 0){
         this.src = "x.jpg";
+
     }
     else{
         this.src = "o.jpg";
@@ -32,6 +38,8 @@ for (let i = 0; i < 9; i++){
     newImg.src = "none.jpg";
     newImg.id = `grid ${i}`;
     newImg.addEventListener('click', handClick, {once:true});
+    
+    board[Math.floor(i/3)][i%3] = new node(newImg, Math.floor(i/3) + 1, i%3 + 1);
     container.appendChild(newImg);
 }
 
