@@ -1,21 +1,21 @@
 const container = document.querySelector('#container');
-
-const total_cells = 361;
+const dim = 19;
+const total_cells = dim**2;
 var num_terms = 0;
 board = [];
 // creates a 2D arr with all 0s;
-for (let i = 0; i < 19; i++){
+for (let i = 0; i < dim; i++){
     board[i] = [];
-    for (let j = 0; j < 19; j++){
+    for (let j = 0; j < dim; j++){
         board[i][j] = 0;
     }
 }
 
 function GetStatusImg(img){
-    if (img.src === "none.jpg"){
+    if (img.getAttribute('src') === "none.jpg"){
         return "none";
     }
-    else if (img.src === "x.jpg"){
+    else if (img.getAttribute('src') === "x.jpg"){
         return "x";
     }
     else{
@@ -23,6 +23,56 @@ function GetStatusImg(img){
     }
 }
 
+function CheckWin(img){
+    let piece = GetStatusImg(img);
+    let current_x = img.getAttribute("x");
+    let current_y = img.getAttribute("y");
+
+    // check horizontal and vertical;
+    let count = 0;
+    for (let i = 0; i < 19; i++){
+        if (GetStatusImg(board[current_x][i]) === piece){
+            count += 1;
+        }
+        else{
+            count = 0;
+        }
+        if (count === 5){
+            return piece;
+        }
+    }
+    count = 0;
+    for (let i = 0; i < 19; i++){
+        if (GetStatusImg(board[i][current_x]) === piece){
+            count += 1;
+        }
+        else{
+            count = 0;
+        }
+        if (count === 5){
+            return piece;
+        }
+    }
+
+}
+function CheckDiagonal(img){
+    let to_left = img.getAttribute("x");
+    let to_top = img.getAttribute("y");
+    let to_right = 19 - img.getAttribute("x");
+    let to_bottom = 19 - img.getAttribute("y");
+
+    let left_top = Math.min(to_left, to_top);
+    let right_bottom = Math.min(to_right, to_bottom);
+
+    let start_pos_x = img.getAttribute("x") - left_top;
+    let start_pos_y = img.getAttribute("y") - left_top;
+    
+    let end_pos_x = img.getAttribute("x") + right_bottom;
+    let end_pos_y = img.getAttribute("y") + right_bottom;
+
+    console.log(`${start_pos_x}, ${start_pos_y}, ${end_pos_x}, ${end_pos_y}`);
+    
+}
 
 function handClick(e){
     
@@ -38,6 +88,17 @@ function handClick(e){
         // update the board;
  
     }
+    /*
+    if (CheckWin(this)){
+        console.log(`${GetStatusImg(this)} wins`);
+ 
+    }
+    */
+    CheckDiagonal(this);
+    
+    
+
+    
     
     num_terms++;
     
@@ -45,17 +106,17 @@ function handClick(e){
 //initialize the board;
 // The board contains the nodes;
 // In each node, there is the img object (none.jpg), and the position of the node;
-for (let i = 0; i < 361; i++){
+for (let i = 0; i < total_cells; i++){
     const newImg = document.createElement('img');
     // init all the pics with none.jpg
     newImg.src = "none.jpg";
     // set the eventlistener for all clicks;
     newImg.addEventListener('click', handClick, {once:true});
     // set up the coordinates for all the imgs
-    newImg.setAttribute("x", `${Math.floor(i/19)}`);
-    newImg.setAttribute("y", `${i%19}`);
+    newImg.setAttribute("x", `${Math.floor(i/dim)}`);
+    newImg.setAttribute("y", `${i%dim}`);
     // put all the imgs inside the board;
-    board[Math.floor(i/19)][i%19] = newImg;
+    board[Math.floor(i/dim)][i%dim] = newImg;
     container.appendChild(newImg);
 }
 
