@@ -43,7 +43,7 @@ function CheckWin(img){
     }
     count = 0;
     for (let i = 0; i < 19; i++){
-        if (GetStatusImg(board[i][current_x]) === piece){
+        if (GetStatusImg(board[i][current_y]) === piece){
             count += 1;
         }
         else{
@@ -54,24 +54,36 @@ function CheckWin(img){
         }
     }
 
-}
-function CheckDiagonal(img){
+    count = 0;
     let to_left = img.getAttribute("x");
     let to_top = img.getAttribute("y");
-    let to_right = 19 - img.getAttribute("x");
-    let to_bottom = 19 - img.getAttribute("y");
+    let to_right = 18 - img.getAttribute("x");
+    let to_bottom = 18 - img.getAttribute("y");
 
     let left_top = Math.min(to_left, to_top);
     let right_bottom = Math.min(to_right, to_bottom);
 
     let start_pos_x = img.getAttribute("x") - left_top;
     let start_pos_y = img.getAttribute("y") - left_top;
-    
-    let end_pos_x = img.getAttribute("x") + right_bottom;
-    let end_pos_y = img.getAttribute("y") + right_bottom;
+    let end_pos_x = parseInt(img.getAttribute("x")) + right_bottom;
+    let end_pos_y = parseInt(img.getAttribute("y")) + right_bottom;
 
-    console.log(`${start_pos_x}, ${start_pos_y}, ${end_pos_x}, ${end_pos_y}`);
+    let jumps = end_pos_x - start_pos_x;
+
+    for (let i = 0; i < jumps + 1; i++){
+        if (GetStatusImg(board[start_pos_x+i][start_pos_y+i]) === piece){
+            count += 1;
+        }
+        else{
+            count = 0;
+        }
+        if (count === 5){
+            return piece;
+        }
+    }
     
+
+
 }
 
 function handClick(e){
@@ -88,13 +100,13 @@ function handClick(e){
         // update the board;
  
     }
-    /*
+    
     if (CheckWin(this)){
         console.log(`${GetStatusImg(this)} wins`);
- 
+        window.location.reload();
     }
-    */
-    CheckDiagonal(this);
+    
+
     
     
 
