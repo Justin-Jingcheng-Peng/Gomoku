@@ -3,6 +3,11 @@ const dim = 19;
 const total_cells = dim**2;
 var num_terms = 0;
 board = [];
+const winningMessageElement = document.getElementById('winningMessage')
+const restartButton = document.getElementById('restartButton')
+restartButton.addEventListener("click", reload, false);
+const winningMessageTextElement = document.querySelector('[data-winning-message-text]')
+winningMessageElement.classList.remove('show')
 // creates a 2D arr with all 0s;
 for (let i = 0; i < dim; i++){
     board[i] = [];
@@ -10,7 +15,9 @@ for (let i = 0; i < dim; i++){
         board[i][j] = 0;
     }
 }
-
+function reload() {
+    reload = location.reload();
+}
 function GetStatusImg(img){
     if (img.getAttribute('src') === "none.jpg"){
         return "none";
@@ -22,6 +29,7 @@ function GetStatusImg(img){
         return "o";
     }
 }
+
 
 function CheckWin(img){
     let piece = GetStatusImg(img);
@@ -38,7 +46,7 @@ function CheckWin(img){
             count = 0;
         }
         if (count === 5){
-            return piece;
+            return "horizontal";
         }
     }
     count = 0;
@@ -50,7 +58,7 @@ function CheckWin(img){
             count = 0;
         }
         if (count === 5){
-            return piece;
+            return "vertical";
         }
     }
 
@@ -78,7 +86,7 @@ function CheckWin(img){
             count = 0;
         }
         if (count === 5){
-            return piece;
+            return "diagonal";
         }
     }
     
@@ -91,27 +99,27 @@ function handClick(e){
     if (num_terms % 2 == 0){
         // first change the display of this img
         this.src = "x.jpg";
+        document.getElementById("top_title").innerText = "O's Turn";
         // update the board;
       
     }
     else{
         // first change the display of this img;
         this.src = "o.jpg";
+        document.getElementById("top_title").innerText = "X's Turn";
         // update the board;
  
     }
     
     if (CheckWin(this)){
-        console.log(`${GetStatusImg(this)} wins`);
-        window.location.reload();
+        document.getElementById("top_title").innerText = "Game Over!";
+        console.log(GetStatusImg(this));
+        winningMessageTextElement.innerText = `${GetStatusImg(this)} wins!`
+        winningMessageElement.classList.add('show')
+        
+    
     }
-    
 
-    
-    
-
-    
-    
     num_terms++;
     
 }
